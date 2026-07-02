@@ -1,0 +1,24 @@
+{
+  "name": "theloopskill",
+  "displayName": "TheLoopSkill",
+  "description": "Multi-agent workflow orchestration for Claude Code: pipeline/parallel/loop patterns with harness & loop engineering policies, plus skills for security code review, system/architecture design, and project orchestration with per-task model routing.",
+  "version": "0.1.0",
+  "author": {
+    "name": "santapong",
+    "email": "santapongsondhi@gmail.com"
+  },
+  "homepage": "https://github.com/santapong/TheLoopSkill",
+  "repository": "https://github.com/santapong/TheLoopSkill",
+  "license": "MIT",
+  "keywords": [
+    "workflow",
+    "orchestration",
+    "multi-agent",
+    "security-review",
+    "architecture",
+    "code-review"
+  ],
+  "skills": [
+    "./.claude/skills"
+  ]
+}

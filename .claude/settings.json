@@ -1,0 +1,10 @@
+{
+  "extraKnownMarketplaces": {
+    "theloopskill": {
+      "source": "./"
+    }
+  },
+  "enabledPlugins": {
+    "theloopskill@theloopskill": true
+  }
+}
