@@ -1,6 +1,6 @@
 # TheLoopSkill
 
-A Claude Code **plugin** — a set of skills for running real engineering work as multi-agent workflows. At its core is the `workflow` skill (pipeline/parallel/loop orchestration governed by explicit engineering policies and a pluggable lifecycle framework); three domain skills build on top of it for security review, system design, and project orchestration.
+A Claude Code **plugin** — a set of skills for running real engineering work as multi-agent workflows. At its core is the `workflow` skill (pipeline/parallel/loop orchestration governed by explicit engineering policies and a pluggable lifecycle framework); domain skills build on top of it for security review, system design, project orchestration, and research.
 
 ## Skills
 
@@ -10,6 +10,7 @@ A Claude Code **plugin** — a set of skills for running real engineering work a
 | **reviewing-code** | `/reviewing-code <target>` | Security + code-quality review using OWASP Top 10, CWE Top 25, ASVS, and CVSS v4. LLM-native (zero required deps), finder-per-category → dedup → adversarial verify, reports HIGH/MEDIUM findings at confidence ≥0.8. |
 | **designing-systems** | `/designing-systems <problem>` | Architecture & system design: pattern selection, API design, backend/data modeling, frontend performance, deployment strategy, and NFRs. Emits ADRs and C4 diagrams. |
 | **orchestrating-projects** | `/orchestrating-projects <project>` | A planning layer on top of `workflow`: decomposes a project into a typed task DAG, chooses pipeline/parallel shapes, and routes the right Claude model + effort tier to each task ("right model for the right job"). |
+| **researching-topics** | `/researching-topics <question>` | Multi-source research with adversarial fact-checking: multi-modal search fan-out → deep-read → refute-first verification → cited synthesis. Every reported claim carries a source and has survived a refutation attempt. |
 
 ## The `workflow` skill
 
@@ -58,6 +59,7 @@ Three ways to use these skills — see **[INSTALL.md](INSTALL.md)** for full det
 | `.claude/skills/reviewing-code/` | Security + quality review skill: `SKILL.md`, `references/` (methodology, OWASP/CWE, playbooks, severity model, quality checks), `templates/security-review.workflow.js` |
 | `.claude/skills/designing-systems/` | Architecture skill: `SKILL.md`, `references/` (patterns, API, backend, frontend, deployment, NFR), `templates/` (ADR + C4 diagrams) |
 | `.claude/skills/orchestrating-projects/` | Project orchestration skill: `SKILL.md`, `references/` (model routing, task decomposition), `templates/project-plan.workflow.js` |
+| `.claude/skills/researching-topics/` | Research skill: `SKILL.md`, `references/` (methodology, source evaluation), `templates/research.workflow.js` |
 | `.claude-plugin/plugin.json` | Plugin manifest (references skills via `./.claude/skills`) |
 | `.claude-plugin/marketplace.json` | Marketplace manifest listing the `theloopskill` plugin |
 | `.claude/settings.json` | Enables the plugin/marketplace for Claude Code on the web |

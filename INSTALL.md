@@ -1,6 +1,6 @@
 # Installing TheLoopSkill
 
-TheLoopSkill ships four Claude Code skills:
+TheLoopSkill ships five Claude Code skills:
 
 | Skill | What it does |
 |---|---|
@@ -8,6 +8,7 @@ TheLoopSkill ships four Claude Code skills:
 | `reviewing-code` | Security + code-quality review (OWASP Top 10, CWE Top 25, ASVS; finder→verify orchestration) |
 | `designing-systems` | System/architecture design: patterns, API, backend, frontend perf, deployment, NFRs, ADRs + C4 |
 | `orchestrating-projects` | Project-manager planning layer: decompose into a task DAG and assign the right model+effort per task |
+| `researching-topics` | Multi-source research with adversarial fact-checking: search fan-out → deep-read → refute-first verify → cited synthesis |
 
 The **canonical location** is `.claude/skills/<name>/` — a single source of truth that works for all three install paths below. The plugin references these same files via the `skills` field in `.claude-plugin/plugin.json`, so nothing is duplicated.
 
@@ -87,7 +88,8 @@ TheLoopSkill/
 │       ├── workflow/
 │       ├── reviewing-code/
 │       ├── designing-systems/
-│       └── orchestrating-projects/
+│       ├── orchestrating-projects/
+│       └── researching-topics/
 ├── INSTALL.md
 └── README.md
 ```
