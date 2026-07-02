@@ -1,0 +1,19 @@
+{
+  "name": "theloopskill",
+  "description": "TheLoopSkill marketplace — workflow orchestration and engineering skills for Claude Code.",
+  "owner": {
+    "name": "santapong",
+    "email": "santapongsondhi@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "theloopskill",
+      "source": "./",
+      "description": "Multi-agent workflow orchestration plus security-review, system-design, and project-orchestration skills.",
+      "version": "0.1.0",
+      "author": {
+        "name": "santapong"
+      }
+    }
+  ]
+}
