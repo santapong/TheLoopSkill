@@ -8,7 +8,7 @@ Every agent you spawn runs on *some* model at *some* effort. Picking well is the
 
 | Model | ID | Reach for it when |
 |---|---|---|
-| Haiku 4.5 | `claude-haiku-4-5` | The work is mechanical and voluminous — cheap and fast is the whole point. |
+| Haiku 4.5 | `claude-haiku-4-5-20251001` | The work is mechanical and voluminous — cheap and fast is the whole point. |
 | Sonnet 5 | `claude-sonnet-5` | The work is real production output — most coding and drafting. |
 | Opus 4.8 | `claude-opus-4-8` | The work needs judgment — decompose, synthesize, review, or judge. |
 | Fable 5 | `claude-fable-5` | Opt-in only. The single hardest narrow long-horizon reasoning task, eyes open to the caveats. |
@@ -66,11 +66,11 @@ Project: *migrate 40 services off a deprecated logging library.* Session model i
 
 | # | Task | Base task type → route | Modifier | Final route (`agent()` opts) |
 |---|---|---|---|---|
-| 1 | Scan each repo, list every call site of the old lib | extraction → Haiku 4.5, `low` | wide fan-out (40 repos): already at the floor | `model:'claude-haiku-4-5'`, `effort:'low'` |
-| 2 | Rewrite each call site to the new API | implementation → Sonnet 5, `high` | wide fan-out (≈2k sites): push down; split off the trivial ones | trivial sites `model:'claude-haiku-4-5'`; ambiguous sites `model:'claude-sonnet-5'`, `effort:'medium'` |
+| 1 | Scan each repo, list every call site of the old lib | extraction → Haiku 4.5, `low` | wide fan-out (40 repos): already at the floor | `model:'claude-haiku-4-5-20251001'`, `effort:'low'` |
+| 2 | Rewrite each call site to the new API | implementation → Sonnet 5, `high` | wide fan-out (≈2k sites): push down; split off the trivial ones | trivial sites `model:'claude-haiku-4-5-20251001'`; ambiguous sites `model:'claude-sonnet-5'`, `effort:'medium'` |
 | 3 | Decompose the rollout into dependency-safe batches | decomposition → Opus 4.8, `high` | gates every later task (error-cost) → bump effort | omit `model` (inherits Opus), `effort:'xhigh'` |
 | 4 | Confirm no service silently drops log lines post-migration | verification → Opus 4.8, `xhigh` | correctness-critical, false "all clear" is costly | omit `model`, `effort:'max'` |
-| 5 | Regenerate the migration changelog table | formatting → Haiku 4.5, omit effort | none | `model:'claude-haiku-4-5'` |
+| 5 | Regenerate the migration changelog table | formatting → Haiku 4.5, omit effort | none | `model:'claude-haiku-4-5-20251001'` |
 
 Notes on the routing:
 

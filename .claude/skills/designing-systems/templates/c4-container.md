@@ -19,11 +19,11 @@ Rule of thumb: if you could restart it independently and it has its own technolo
 
 ```mermaid
 C4Container
-    title Container diagram for <System Name>
+    title Container diagram for Your System
 
     Person(user, "Customer", "An authenticated end user of the product.")
 
-    System_Boundary(sys, "<System Name>") {
+    System_Boundary(sys, "Your System") {
         Container(web, "Web App", "TypeScript, Next.js", "Server-renders pages and hosts the SPA the customer uses in a browser.")
         Container(api, "API Application", "Go / Node / Java", "Serves product functionality over a JSON/HTTPS REST API; enforces authn/authz.")
         Container(worker, "Async Worker", "Same stack as API", "Consumes queued jobs and events: sends mail, builds projections, runs retries.")
@@ -48,7 +48,7 @@ C4Container
 
 ## Filling it in
 
-- **`title` names the one system you're zooming into**, and it must match a box in your context diagram. One Container diagram per system — if you're tempted to draw two systems' internals at once, you want two diagrams.
+- **Rename `Your System` to the one system you're zooming into** — in both the `title` and the `System_Boundary` label — and match it to a box in your context diagram. One Container diagram per system; if you're tempted to draw two systems' internals at once, you want two diagrams. (Concrete labels read best, e.g. `Acme Platform`.)
 - **Carry the people and external systems in from the context diagram** and place them outside the `System_Boundary`. If a person or external system appears here but not there (or vice versa), one of the diagrams is wrong.
 - **Every container gets a technology in the third slot** (`"TypeScript, Next.js"`). The tech choice is the entire point of this level — a container with no technology is a context diagram in disguise.
 - **Every relationship gets intent *and* protocol** (`"Calls", "JSON/HTTPS"`). Unlabeled arrows are the most common C4 smell; a reader should learn *what* flows and *how* from the edge alone.

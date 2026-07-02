@@ -27,6 +27,22 @@ Read this when you are on step 3 of the workflow (data & consistency), or when t
 
 **The tax you take on with the second store is the dual-write problem**: a single logical change must now land in two systems that don't share a transaction. Do not solve it with two writes in a row in application code — a crash between them corrupts state silently. Solve it with the **outbox pattern** (below) or change-data-capture. If you can serve the pattern from the primary store, you avoid this tax entirely; that's why "one store" is the default.
 
+## Sharding & partitioning: the last resort, not the first reach
+
+**Partition a table when one machine can no longer hold it or serve it — and not one moment sooner.** There are two axes, and they are not the same decision:
+
+- **Vertical partitioning** splits a table by *columns*: move the rarely-read blob or a wide audit column to its own table (or store) so the hot rows stay narrow and cache-dense. Cheap, low-risk, and often all you need.
+- **Horizontal partitioning (sharding)** splits a table by *rows*: each shard holds a disjoint slice of the keyspace on its own primary. This is what buys write throughput and dataset size past a single node — and it is the expensive one that most of this section is warning you about.
+
+**The shard key is the entire decision, and it must match your dominant access pattern.** Choose the key that your hot queries already filter on (`tenant_id`, `user_id`) so a request routes to exactly one shard. A key that doesn't match your reads forces **scatter-gather**: every query fans out to all shards and waits on the slowest, which is *worse* than the single node you were fleeing. And the key is nearly irreversible — the data is already physically distributed by it, so a wrong choice is a migration, not a config change.
+
+**What sharding costs you the moment you adopt it**:
+
+- **Cross-shard transactions and joins vanish.** An operation spanning two shards becomes a distributed transaction (a saga — below) or an application-side join. Referential integrity across shards is now your job, not the database's.
+- **Rebalancing is real operational pain.** Adding a shard, or fixing one that grew lopsided into a hotspot, means moving live data while still serving traffic. Consistent hashing and range-based schemes each trade differently here, and none of them is free.
+
+**House default: exhaust the single-node ladder first.** Before you shard, climb: a bigger primary, then **read replicas** to offload reads (most systems are read-heavy, and this rung alone buys years), then vertical partitioning, then a caching tier. Reach for horizontal sharding only when a single primary plus read replicas **provably can't keep up** on write throughput or dataset size — reach for it last, not first. Plenty of systems sharded early and bought years of distributed-systems tax to solve a problem one read replica would have absorbed.
+
 ## Indexing: the cheapest 10x, and the silent write tax
 
 An index turns a full-table scan (O(n)) into a lookup (O(log n) for a B-tree). It is usually the single highest-leverage fix for a slow read — and the most over-applied one.
@@ -56,7 +72,7 @@ Escalate to another strategy only when the access pattern demands it:
 
 ## CAP and PACELC: choose consistency per domain
 
-**CAP**: when the network **partitions** (nodes can't talk), a distributed store must sacrifice either **C**onsistency (every read sees the latest write) or **A**vailability (every request gets a non-error response). You don't get both during a partition — the only choice is which one you give up. **PACELC** completes the honest picture: **P**artition → **A**vailability or **C**onsistency; **E**lse (normal operation) → **L**atency or **C**onsistency. Even with no partition, synchronous strong consistency costs latency (a write must reach a quorum before it returns). Every distributed store sits somewhere on this map — Postgres synchronous replication is CP/EC (it favors consistency, paying latency); a Dynamo-style store is AP/EL (it favors availability and latency, accepting eventual consistency).
+**CAP**: when the network **partitions** (nodes can't talk), a distributed store must sacrifice either **C**onsistency (every read sees the latest write) or **A**vailability (every request gets a non-error response). You don't get both during a partition — the only choice is which one you give up. **PACELC** completes the honest picture: **P**artition → **A**vailability or **C**onsistency; **E**lse (normal operation) → **L**atency or **C**onsistency. Even with no partition, synchronous strong consistency costs latency (a write must reach a quorum before it returns). Every distributed store sits somewhere on this map — Postgres synchronous replication is PC/EC (it favors consistency, paying latency); a Dynamo-style store is PA/EL (it favors availability and latency, accepting eventual consistency).
 
 **Turn this into a per-domain policy**, not a system-wide religion:
 
@@ -96,7 +112,7 @@ Three patterns for the moment a single local transaction no longer covers the ch
 
 **The pattern**: model it as a sequence of local transactions, each publishing an event that triggers the next. Failure at any step runs **compensating transactions** that semantically undo the prior steps (refund the charge, release the reservation). Orchestrated (a coordinator directs each step) or choreographed (services react to each other's events); orchestration is easier to reason about and debug at more than a couple of steps.
 
-- **When**: a genuinely cross-service transaction you can't collapse into one store. If the whole operation fits in one database, use a real transaction — a saga would be strictly worse.
+- **When**: a genuinely cross-service transaction you can't collapse into one store — including the cross-shard write that sharding just created. If the whole operation fits in one database, use a real transaction — a saga would be strictly worse.
 - **Cost**: you trade atomicity and isolation for availability. There is no rollback, only compensation, so you must design a semantic undo for *every* step and accept intermediate states other readers can observe (an order briefly "placed but unpaid"). It is markedly harder to build, test, and debug than a local transaction — the price of a boundary you had a requirement to cross.
 
 ### CQRS — separate the write model from the read model
@@ -151,6 +167,8 @@ A backend that calls a database or another service **will** face slowness and fa
 | Large binary objects | Object storage (S3), not DB blobs |
 | Must write DB **and** publish an event atomically | Outbox pattern |
 | A query is slow on a modest table | Add/fix the index before touching the model |
+| Read load outgrows one primary | Read replicas — before any sharding |
+| A single primary + replicas provably can't keep up | Shard horizontally on the dominant access key — last resort |
 
 **Consistency & transactions**
 
@@ -158,7 +176,7 @@ A backend that calls a database or another service **will** face slowness and fa
 |---|---|
 | Money, inventory, auth, uniqueness | Strong consistency, one transactional store |
 | Feeds, counts, search, recommendations, analytics | Eventual consistency |
-| Transaction spans multiple services/stores | Saga with compensating transactions |
+| Transaction spans multiple services/stores/shards | Saga with compensating transactions |
 | Whole operation fits one database | One ACID transaction — not a saga |
 | Huge read/write asymmetry on one aggregate | CQRS for that aggregate |
 | Plain symmetric CRUD | Single model — not CQRS |
@@ -168,7 +186,7 @@ A backend that calls a database or another service **will** face slowness and fa
 
 Named to make a pattern concrete, **not** as defaults to adopt — each fits a scale and access pattern that is probably not yours:
 
-- **Postgres** — the relational default that stretches far past where people abandon it: JSONB, full-text, geo, materialized views, logical replication. Reach past it only for a pattern it genuinely can't serve.
+- **Postgres** — the relational default that stretches far past where people abandon it: JSONB, full-text, geo, materialized views, logical replication, read replicas, and native table partitioning before you ever reach for cross-node sharding. Reach past it only for a pattern it genuinely can't serve.
 - **Redis** — the in-memory exemplar for cache-aside, sessions, rate limiters, and ephemeral state. Fast because it's memory-first; treat it as a cache, not a system of record, unless you've explicitly configured and accepted its durability trade-offs.
 - **Kafka** — the streaming/event-log exemplar for high-fan-out ingest, per-partition ordering, and replayable consumption. Its "exactly-once" holds inside its boundary; the moment an effect leaves it, idempotency is yours. Overkill for a few thousand events a day — a plain queue (SQS/RabbitMQ) or the outbox off your existing DB is simpler and enough.
 
