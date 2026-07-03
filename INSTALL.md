@@ -1,6 +1,6 @@
 # Installing TheLoopSkill
 
-TheLoopSkill ships eleven Claude Code skills:
+TheLoopSkill ships twelve Claude Code skills:
 
 | Skill | What it does |
 |---|---|
@@ -15,6 +15,7 @@ TheLoopSkill ships eleven Claude Code skills:
 | `writing-docs` | Write + maintain docs (README, API, docstrings, ADRs) via the Diátaxis model, verified against code |
 | `finding-frameworks` | Prior-art / build-vs-buy check before building: search stdlib → registries → services → standards, evaluate, recommend reuse |
 | `engineering-harnesses` | Set up a project's Claude Code harness: permissions, hooks, MCP (`.mcp.json`), and automation loops — from copy-paste scaffolds |
+| `automating-improvements` | Autonomous engineering loop: read feedback (issues/PRs/CI), act as draft PRs with tests, research improvements when idle — propose-only, never merges |
 
 The **canonical location** is `.claude/skills/<name>/` — a single source of truth that works for all three install paths below. The plugin references these same files via the `skills` field in `.claude-plugin/plugin.json`, so nothing is duplicated.
 
@@ -101,7 +102,8 @@ TheLoopSkill/
 │       ├── diagnosing-bugs/
 │       ├── writing-docs/
 │       ├── finding-frameworks/
-│       └── engineering-harnesses/
+│       ├── engineering-harnesses/
+│       └── automating-improvements/
 ├── INSTALL.md
 └── README.md
 ```

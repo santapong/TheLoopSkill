@@ -24,7 +24,9 @@
     "build-vs-buy",
     "hooks",
     "permissions",
-    "mcp"
+    "mcp",
+    "autonomous",
+    "automation"
   ],
   "skills": [
     "./.claude/skills"
