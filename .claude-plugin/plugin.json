@@ -20,7 +20,8 @@
     "research",
     "testing",
     "debugging",
-    "documentation"
+    "documentation",
+    "build-vs-buy"
   ],
   "skills": [
     "./.claude/skills"

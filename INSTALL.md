@@ -1,6 +1,6 @@
 # Installing TheLoopSkill
 
-TheLoopSkill ships nine Claude Code skills:
+TheLoopSkill ships ten Claude Code skills:
 
 | Skill | What it does |
 |---|---|
@@ -13,6 +13,7 @@ TheLoopSkill ships nine Claude Code skills:
 | `writing-tests` | Design + write tests matching the repo's stack; verify each runs and fails for the right reason |
 | `diagnosing-bugs` | Hypothesis-driven debugging: reproduce → localize → root-cause → fix → regression test |
 | `writing-docs` | Write + maintain docs (README, API, docstrings, ADRs) via the Diátaxis model, verified against code |
+| `finding-frameworks` | Prior-art / build-vs-buy check before building: search stdlib → registries → services → standards, evaluate, recommend reuse |
 
 The **canonical location** is `.claude/skills/<name>/` — a single source of truth that works for all three install paths below. The plugin references these same files via the `skills` field in `.claude-plugin/plugin.json`, so nothing is duplicated.
 
@@ -97,7 +98,8 @@ TheLoopSkill/
 │       ├── auditing-changes/
 │       ├── writing-tests/
 │       ├── diagnosing-bugs/
-│       └── writing-docs/
+│       ├── writing-docs/
+│       └── finding-frameworks/
 ├── INSTALL.md
 └── README.md
 ```
