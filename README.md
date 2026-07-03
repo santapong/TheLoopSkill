@@ -1,6 +1,6 @@
 # TheLoopSkill
 
-A Claude Code **plugin** — a set of skills for running real engineering work as multi-agent workflows. At its core is the `workflow` skill (pipeline/parallel/loop orchestration governed by explicit engineering policies and a pluggable lifecycle framework); domain skills build on top of it to cover the build lifecycle — design, prior-art/build-vs-buy checks, project orchestration, code review, change audit, testing, debugging, documentation, and research.
+A Claude Code **plugin** — a set of skills for running real engineering work as multi-agent workflows. At its core is the `workflow` skill (pipeline/parallel/loop orchestration governed by explicit engineering policies and a pluggable lifecycle framework); domain skills build on top of it to cover the build lifecycle — design, prior-art/build-vs-buy checks, project orchestration, code review, change audit, testing, debugging, documentation, research, and harness engineering (hooks, permissions, MCP, automation loops).
 
 ## Skills
 
@@ -16,6 +16,7 @@ A Claude Code **plugin** — a set of skills for running real engineering work a
 | **diagnosing-bugs** | `/diagnosing-bugs <symptom>` | Hypothesis-driven debugging: reproduce → localize → root-cause → minimal fix → regression test, with a workflow template for parallel hypothesis elimination. |
 | **writing-docs** | `/writing-docs <target>` | Writes and maintains docs (README, API reference, docstrings, guides, ADRs) using the Diátaxis doc-type model, verifying claims against the actual code. |
 | **finding-frameworks** | `/finding-frameworks <need>` | Prior-art / build-vs-buy check *before* building: searches stdlib → registries → services → standards, evaluates candidates, and recommends reuse over reinvention. Guards against over-engineering. |
+| **engineering-harnesses** | `/engineering-harnesses <goal>` | Set up a project's Claude Code harness from copy-paste scaffolds: permissions (allow/deny/ask), hooks, MCP servers (`.mcp.json`), and automation loops (SessionStart, `/loop`, scheduled tasks, Routines). |
 
 ## The `workflow` skill
 
@@ -70,6 +71,7 @@ Three ways to use these skills — see **[INSTALL.md](INSTALL.md)** for full det
 | `.claude/skills/diagnosing-bugs/` | Debugging skill: `SKILL.md`, `references/` (methodology, hypothesis testing), `templates/bug-diagnosis.workflow.js` |
 | `.claude/skills/writing-docs/` | Documentation skill: `SKILL.md`, `references/` (doc types, style), `templates/doc-generation.workflow.js` |
 | `.claude/skills/finding-frameworks/` | Prior-art / build-vs-buy skill: `SKILL.md`, `references/` (where to look, evaluation criteria, build-vs-buy), `templates/prior-art-search.workflow.js` |
+| `.claude/skills/engineering-harnesses/` | Harness skill: `SKILL.md`, `references/` (permissions, hooks, mcp, automation-loops), `templates/` (settings.json, mcp.json, hook scripts, loop.md) |
 | `.claude-plugin/plugin.json` | Plugin manifest (references skills via `./.claude/skills`) |
 | `.claude-plugin/marketplace.json` | Marketplace manifest listing the `theloopskill` plugin |
 | `.claude/settings.json` | Enables the plugin/marketplace for Claude Code on the web |
