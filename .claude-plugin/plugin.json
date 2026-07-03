@@ -1,7 +1,7 @@
 {
   "name": "theloopskill",
   "displayName": "TheLoopSkill",
-  "description": "Multi-agent workflow orchestration for Claude Code: pipeline/parallel/loop patterns with harness & loop engineering policies, plus skills for security code review, system/architecture design, and project orchestration with per-task model routing.",
+  "description": "Multi-agent workflow orchestration for Claude Code: pipeline/parallel/loop patterns with harness & loop engineering policies, plus skills for security code review, system/architecture design, project orchestration with per-task model routing, and multi-source research with adversarial fact-checking.",
   "version": "0.1.0",
   "author": {
     "name": "santapong",
@@ -16,7 +16,12 @@
     "multi-agent",
     "security-review",
     "architecture",
-    "code-review"
+    "code-review",
+    "research",
+    "testing",
+    "debugging",
+    "documentation",
+    "build-vs-buy"
   ],
   "skills": [
     "./.claude/skills"

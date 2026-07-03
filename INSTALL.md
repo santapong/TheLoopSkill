@@ -1,6 +1,6 @@
 # Installing TheLoopSkill
 
-TheLoopSkill ships four Claude Code skills:
+TheLoopSkill ships ten Claude Code skills:
 
 | Skill | What it does |
 |---|---|
@@ -8,6 +8,12 @@ TheLoopSkill ships four Claude Code skills:
 | `reviewing-code` | Security + code-quality review (OWASP Top 10, CWE Top 25, ASVS; finder→verify orchestration) |
 | `designing-systems` | System/architecture design: patterns, API, backend, frontend perf, deployment, NFRs, ADRs + C4 |
 | `orchestrating-projects` | Project-manager planning layer: decompose into a task DAG and assign the right model+effort per task |
+| `researching-topics` | Multi-source research with adversarial fact-checking: search fan-out → deep-read → refute-first verify → cited synthesis |
+| `auditing-changes` | Change/impact audit → report: classify changes, trace blast radius, rate risk, check coverage (delegates security to reviewing-code) |
+| `writing-tests` | Design + write tests matching the repo's stack; verify each runs and fails for the right reason |
+| `diagnosing-bugs` | Hypothesis-driven debugging: reproduce → localize → root-cause → fix → regression test |
+| `writing-docs` | Write + maintain docs (README, API, docstrings, ADRs) via the Diátaxis model, verified against code |
+| `finding-frameworks` | Prior-art / build-vs-buy check before building: search stdlib → registries → services → standards, evaluate, recommend reuse |
 
 The **canonical location** is `.claude/skills/<name>/` — a single source of truth that works for all three install paths below. The plugin references these same files via the `skills` field in `.claude-plugin/plugin.json`, so nothing is duplicated.
 
@@ -87,7 +93,13 @@ TheLoopSkill/
 │       ├── workflow/
 │       ├── reviewing-code/
 │       ├── designing-systems/
-│       └── orchestrating-projects/
+│       ├── orchestrating-projects/
+│       ├── researching-topics/
+│       ├── auditing-changes/
+│       ├── writing-tests/
+│       ├── diagnosing-bugs/
+│       ├── writing-docs/
+│       └── finding-frameworks/
 ├── INSTALL.md
 └── README.md
 ```
