@@ -17,7 +17,10 @@
     "security-review",
     "architecture",
     "code-review",
-    "research"
+    "research",
+    "testing",
+    "debugging",
+    "documentation"
   ],
   "skills": [
     "./.claude/skills"

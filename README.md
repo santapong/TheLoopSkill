@@ -1,6 +1,6 @@
 # TheLoopSkill
 
-A Claude Code **plugin** — a set of skills for running real engineering work as multi-agent workflows. At its core is the `workflow` skill (pipeline/parallel/loop orchestration governed by explicit engineering policies and a pluggable lifecycle framework); domain skills build on top of it for security review, system design, project orchestration, and research.
+A Claude Code **plugin** — a set of skills for running real engineering work as multi-agent workflows. At its core is the `workflow` skill (pipeline/parallel/loop orchestration governed by explicit engineering policies and a pluggable lifecycle framework); domain skills build on top of it to cover the build lifecycle — design, project orchestration, code review, change audit, testing, debugging, documentation, and research.
 
 ## Skills
 
@@ -11,6 +11,10 @@ A Claude Code **plugin** — a set of skills for running real engineering work a
 | **designing-systems** | `/designing-systems <problem>` | Architecture & system design: pattern selection, API design, backend/data modeling, frontend performance, deployment strategy, and NFRs. Emits ADRs and C4 diagrams. |
 | **orchestrating-projects** | `/orchestrating-projects <project>` | A planning layer on top of `workflow`: decomposes a project into a typed task DAG, chooses pipeline/parallel shapes, and routes the right Claude model + effort tier to each task ("right model for the right job"). |
 | **researching-topics** | `/researching-topics <question>` | Multi-source research with adversarial fact-checking: multi-modal search fan-out → deep-read → refute-first verification → cited synthesis. Every reported claim carries a source and has survived a refutation attempt. |
+| **auditing-changes** | `/auditing-changes <diff\|PR\|range>` | Change/impact audit that produces a *report*: classifies changes, traces blast radius, rates risk, checks test coverage, and delegates the security dimension to `reviewing-code`. Not a defect-list — that's `reviewing-code`. |
+| **writing-tests** | `/writing-tests <target>` | Designs and writes tests (happy/edge/error/property), matches the repo's existing test stack, and verifies each test runs and fails for the right reason. |
+| **diagnosing-bugs** | `/diagnosing-bugs <symptom>` | Hypothesis-driven debugging: reproduce → localize → root-cause → minimal fix → regression test, with a workflow template for parallel hypothesis elimination. |
+| **writing-docs** | `/writing-docs <target>` | Writes and maintains docs (README, API reference, docstrings, guides, ADRs) using the Diátaxis doc-type model, verifying claims against the actual code. |
 
 ## The `workflow` skill
 
@@ -60,6 +64,10 @@ Three ways to use these skills — see **[INSTALL.md](INSTALL.md)** for full det
 | `.claude/skills/designing-systems/` | Architecture skill: `SKILL.md`, `references/` (patterns, API, backend, frontend, deployment, NFR), `templates/` (ADR + C4 diagrams) |
 | `.claude/skills/orchestrating-projects/` | Project orchestration skill: `SKILL.md`, `references/` (model routing, task decomposition), `templates/project-plan.workflow.js` |
 | `.claude/skills/researching-topics/` | Research skill: `SKILL.md`, `references/` (methodology, source evaluation), `templates/research.workflow.js` |
+| `.claude/skills/auditing-changes/` | Change-audit skill: `SKILL.md`, `references/` (methodology, report template), `templates/change-audit.workflow.js` |
+| `.claude/skills/writing-tests/` | Testing skill: `SKILL.md`, `references/` (test design, framework conventions), `templates/test-generation.workflow.js` |
+| `.claude/skills/diagnosing-bugs/` | Debugging skill: `SKILL.md`, `references/` (methodology, hypothesis testing), `templates/bug-diagnosis.workflow.js` |
+| `.claude/skills/writing-docs/` | Documentation skill: `SKILL.md`, `references/` (doc types, style), `templates/doc-generation.workflow.js` |
 | `.claude-plugin/plugin.json` | Plugin manifest (references skills via `./.claude/skills`) |
 | `.claude-plugin/marketplace.json` | Marketplace manifest listing the `theloopskill` plugin |
 | `.claude/settings.json` | Enables the plugin/marketplace for Claude Code on the web |
