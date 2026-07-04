@@ -67,7 +67,7 @@ Install the bundle into any project or user scope via the plugin system.
 # add this repo as a marketplace
 /plugin marketplace add santapong/TheLoopSkill
 
-# install the bundled plugin (all four skills)
+# install the bundled plugin (all twelve skills)
 /plugin install theloopskill@theloopskill
 ```
 
