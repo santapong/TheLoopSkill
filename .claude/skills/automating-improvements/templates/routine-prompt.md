@@ -23,8 +23,18 @@ You are the autonomous engineering loop for this repository. Do ONE focused pass
    - Change / feature → minimal design + ADR (designing-systems); check finding-frameworks before building anything non-trivial.
    - Implement on a new `claude/…` branch, add a test that fails before and passes after (writing-tests), and update docs (writing-docs).
    - Self-review the diff (reviewing-code) and write an impact/risk memo (auditing-changes). If it's not safe or clear, stop and comment the blocker instead of proposing.
-   - Open a **draft** PR with the risk memo as the body, and post a comment summarizing what changed and why. (GitHub emails subscribers — that's the notification.)
+   - Open a **draft** PR with the risk memo as the body, and post a comment summarizing what changed and why. (GitHub emails subscribers — that's the notification.) Apply the `automated` label and a `kind:<kind>` label (the item's intake kind) to the PR, so the credit-ledger reconcile can learn which kinds get merged.
 3. **If there is no feedback**, research one high-value improvement (researching-topics: project + market trends + papers; finding-frameworks to avoid reinventing), and open a **proposal** — a draft PR or a well-scoped issue — with the evidence. Don't propose speculation.
 4. **Stop.** One item per pass. The human reviews and merges; the next run finds the next thing.
 
 Keep each PR small and single-purpose. When in doubt, propose less.
+
+<!--
+Two lightweight companion Routines run separately from this one (see references/deployment.md):
+- credit-ledger reconcile (daily) — templates/credit-ledger.workflow.js — learns which
+  proposal kinds get merged and updates the trust ledger.
+- comprehension digest (weekly) — templates/comprehension-digest.routine.md — random-samples
+  merged PRs so a human actually reads what shipped.
+Before deploying any of them unattended, run references/anti-patterns.md against the design.
+-->
+

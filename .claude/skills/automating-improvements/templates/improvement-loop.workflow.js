@@ -131,9 +131,14 @@ do {
       const verb = MODE === 'live'
         ? 'Implement the change on a NEW claude/-prefixed branch (design -> implement -> add a fails-before/passes-after test -> update docs). Do NOT push to main or merge.'
         : 'Describe the change you WOULD make (design, files, the test you would add) without editing anything.'
+      // AP5 (Tangled Loop) fix: in live mode the Act stage mutates files and multiple
+      // items can run concurrently under pipeline() (H1), so each gets its own git
+      // worktree (H7). Dry mode is read-only and needs no isolation.
+      const actOpts = { label: `act:${key(prev.it)}`, phase: 'Act', schema: ACT_SCHEMA }
+      if (MODE === 'live') actOpts.isolation = 'worktree'
       return agent(
         `${verb}\nItem: ${prev.it.title} — ${prev.it.detail || ''}\nApproach: ${prev.triage.approach}`,
-        { label: `act:${key(prev.it)}`, phase: 'Act', schema: ACT_SCHEMA },
+        actOpts,
       ).then((a) => ({ ...prev, act: a }))
     },
     (prev) => {
@@ -152,6 +157,9 @@ do {
     // EDIT ME (live mode): open a DRAFT PR from h.act.branch and post a summary comment here —
     //   mcp__github__create_pull_request({ draft: true, head: h.act.branch, base: 'main', ... })
     //   mcp__github__add_issue_comment(...). NEVER call merge_pull_request.
+    // Apply the `automated` label AND a `kind:${h.it.kind}` label (or a hidden
+    //   `<!-- credit-kind: ${h.it.kind} -->` body marker) so credit-ledger.workflow.js
+    //   can attribute this PR's outcome back to its kind. See references/credit-horizon.md.
     proposals.push({ source: 'feedback', item: h.it, change: h.act, risk: h.verify })
   }
 } while (budget.total && budget.remaining() > FLOOR && round < MAX_ROUNDS && dry < DRY_LIMIT)

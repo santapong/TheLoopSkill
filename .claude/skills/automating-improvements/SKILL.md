@@ -49,12 +49,15 @@ Work on a `claude/`-prefixed branch only.
 ## 5. Propose — the human gate
 
 - Open a **draft** PR from the `claude/` branch with the `auditing-changes` risk memo as the body, then post a **comment** summarizing what changed and why (this is also how the human is notified — GitHub emails subscribers automatically; see `references/deployment.md`).
+- **Label the PR** `automated` and `kind:<kind>` (the item's intake kind), or embed a `<!-- credit-kind: <kind> -->` marker in the body. The credit ledger keys off these to learn which kinds get merged (`references/credit-horizon.md`); the comprehension digest filters on `automated`.
 - Stop there. **Never** call merge, never push to `main`, never mark ready-for-review without a human. This is harness policy H11 (one workflow per human gate).
 
 ## 6. Run it — supervised or unattended
 
 - **A single supervised pass**: run **`templates/improvement-loop.workflow.js`** (defaults to `mode: "dry"` — produces proposal objects, opens nothing). Flip to live only when you want it to actually open draft PRs.
+- **Before deploying unattended, run every row of `references/anti-patterns.md` against the current design** — it's the pre-flight checklist for the five ways an autonomous loop degrades.
 - **Unattended**: deploy as a **Cloud Routine** using **`templates/routine-prompt.md`**, on a schedule plus a `pull_request` trigger. Full setup, safety scopes, and the issue-polling caveat (Routines don't trigger on issues) are in **`references/deployment.md`**, which builds on the `engineering-harnesses` skill's `automation-loops.md`.
+- **Two companion Routines** run separately (both in `references/deployment.md`): the **credit-ledger reconcile** (`templates/credit-ledger.workflow.js`, daily) so the loop learns which proposal kinds get merged, and the **comprehension digest** (`templates/comprehension-digest.routine.md`, weekly) so a human actually reads what shipped.
 
 ### Non-negotiable safety rules
 
@@ -68,6 +71,11 @@ Work on a `claude/`-prefixed branch only.
 
 - `references/loop-design.md` — the intake→act→verify→propose loop, guards, and convergence
 - `references/feedback-intake.md` — the four sources and the exact GitHub tools; dedup
-- `references/deployment.md` — running it unattended (Cloud Routine / Action), safety scopes, notification
+- `references/deployment.md` — running it unattended (Cloud Routine / Action), safety scopes, notification, and the two companion Routines
+- `references/anti-patterns.md` — the five ways an autonomous loop degrades (AP1–AP5), mapped to this loop's guards; the pre-deploy checklist
+- `references/comprehension-rot.md` — the one cost with no structural guard, and the forced random-sample digest that makes it visible
+- `references/credit-horizon.md` — closing the outcome-feedback gap: the trust ledger design and the three-knob mapping
 - `templates/improvement-loop.workflow.js` — the budget-guarded loop skeleton (dry by default)
 - `templates/routine-prompt.md` — copy-paste prompt for a Cloud Routine / `.claude/loop.md`
+- `templates/credit-ledger.workflow.js` — the ledger reconcile pass (deploy as its own daily Routine)
+- `templates/comprehension-digest.routine.md` — the weekly comprehension-check digest prompt

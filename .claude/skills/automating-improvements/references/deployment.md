@@ -33,6 +33,23 @@ Prefer the lightest mechanism that meets the need: a supervised `/loop` to try i
 
 There is **no native email** in Claude Code. The loop notifies by **posting a GitHub comment** on the draft PR (or the source issue): GitHub's own notification system then emails you and any subscribers — zero infrastructure, works unattended. If you want real email in the message body, add an **MCP email connector** (e.g. Resend) in your Claude settings — connector traffic is Anthropic-routed, so it works even under the Trusted network policy — and have the propose step call it. Avoid `curl`-ing an email API from Bash: that needs a Custom/Full network policy plus an API key in a (web-visible) env var.
 
+## Companion Routines
+
+Two lighter Routines run *alongside* the main improvement loop, on their own schedules. Both are read-mostly and never touch code. Run `references/anti-patterns.md` before deploying any of the three.
+
+### Credit-ledger reconcile — `templates/credit-ledger.workflow.js` (daily)
+
+Learns which proposal *kinds* actually get merged and records it in a trust ledger (`references/credit-horizon.md`).
+
+- **One-time setup**: open an issue titled `🤖 Credit Ledger (automated, do not edit)`, label it `credit-ledger`, and paste the empty-ledger JSON from `credit-horizon.md` as the body. Note its issue number.
+- **Deploy**: a Routine (or headless run) that invokes the template with `args: { repo, ledgerIssueNumber, nowMs, nowIso }`. The main loop must already be labeling PRs `automated` + `kind:<kind>` (see `routine-prompt.md`) for the ledger to attribute outcomes.
+- **The `nowMs` / `nowIso` args are required**: workflow scripts can't read the clock (harness policy H10), so the deploying Routine supplies the current time (epoch ms + ISO string). The reconcile uses them only to age-out stale PRs and stamp `lastRecalc`.
+- **Cadence**: daily is fine; **every few days is also fine** — the `BATCH_SIZE=10` gate means trust weights only recompute once enough new outcomes have accrued, so a slower cadence loses nothing and spends fewer routine-runs against your daily cap.
+
+### Comprehension digest — `templates/comprehension-digest.routine.md` (weekly)
+
+Random-samples merged PRs and opens a `comprehension-check` issue so a human actually reads what shipped (`references/comprehension-rot.md`). It's a **Routine prompt** (a live session samples randomly — a script can't, per H10), deployed weekly.
+
 ## First-run checklist
 
 - [ ] Repo has the Claude GitHub App installed (not just web-setup).
@@ -41,3 +58,5 @@ There is **no native email** in Claude Code. The loop notifies by **posting a Gi
 - [ ] Routine prompt is `routine-prompt.md`, with the never-merge rule intact.
 - [ ] You've run `templates/improvement-loop.workflow.js` in `mode:"dry"` once and reviewed the proposals it would make.
 - [ ] An opt-in label convention limits which issues the loop will act on.
+- [ ] (If using the credit ledger) the pinned `🤖 Credit Ledger` issue exists and its number is wired into the reconcile Routine's `args`.
+- [ ] You ran `references/anti-patterns.md` against the current design (AP5 in particular) before raising concurrency.
