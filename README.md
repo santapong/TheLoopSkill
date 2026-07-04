@@ -73,7 +73,7 @@ Three ways to use these skills — see **[INSTALL.md](INSTALL.md)** for full det
 | `.claude/skills/writing-docs/` | Documentation skill: `SKILL.md`, `references/` (doc types, style), `templates/doc-generation.workflow.js` |
 | `.claude/skills/finding-frameworks/` | Prior-art / build-vs-buy skill: `SKILL.md`, `references/` (where to look, evaluation criteria, build-vs-buy), `templates/prior-art-search.workflow.js` |
 | `.claude/skills/engineering-harnesses/` | Harness skill: `SKILL.md`, `references/` (permissions, hooks, mcp, automation-loops), `templates/` (settings.json, mcp.json, hook scripts, loop.md) |
-| `.claude/skills/automating-improvements/` | Autonomous-loop skill: `SKILL.md`, `references/` (loop-design, feedback-intake, deployment), `templates/` (improvement-loop.workflow.js, routine-prompt.md) |
+| `.claude/skills/automating-improvements/` | Autonomous-loop skill: `SKILL.md`, `references/` (loop-design, feedback-intake, deployment, anti-patterns, comprehension-rot, credit-horizon), `templates/` (improvement-loop, credit-ledger, routine-prompt, comprehension-digest) |
 | `.claude-plugin/plugin.json` | Plugin manifest (references skills via `./.claude/skills`) |
 | `.claude-plugin/marketplace.json` | Marketplace manifest listing the `theloopskill` plugin |
 | `.claude/settings.json` | Enables the plugin/marketplace for Claude Code on the web |
