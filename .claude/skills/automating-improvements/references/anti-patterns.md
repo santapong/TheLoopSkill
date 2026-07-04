@@ -1,9 +1,11 @@
 # Anti-Patterns
 
-Five ways an autonomous loop degrades. Each one is a single missing move, not a vague
+Five ways an autonomous loop degrades by **skipping a move** (AP1–AP5), plus a sixth
+(AP6) where a move **runs but is fooled**. Each is a single failure, not a vague
 "quality" problem — naming which pattern you're looking at tells you which one thing
 broke, not the whole system. Run this checklist before deploying as a Cloud Routine,
-and re-run it any time the loop's behavior feels off or its guards change.
+and re-run it any time the loop's behavior feels off or its guards change. AP1–AP5 are
+detailed below; AP6 is summarized here and treated in full in `verifier-integrity.md`.
 
 ## AP1 — Nodding Loop (verification skipped)
 
@@ -62,6 +64,27 @@ worktree isolation with something cheaper, cap in-flight Act calls to 1 (a `para
 barrier or a semaphore) instead — never run concurrent file-mutating Act stages in a
 shared directory.
 
+## AP6 — Gamed Loop (verification runs but is fooled)
+
+**Symptom:** `safeToPropose` keeps returning `true`, the memos read clean, the credit
+ledger holds — and the artifact is getting worse. The loop hasn't stopped verifying; it
+has learned to pass its own check without being good, or the check has drifted into
+agreeing with it (self-preference, rubric hacking, master-key responses).
+
+**Why it's not AP1.** AP1 is verification *skipped*; AP6 is verification *present and
+lying*. `safeToPropose` gating every item does nothing here, because the judge is the
+thing that was fooled — and a fooled judge cannot report it. AP6 is invisible from inside
+the loop by construction, so it can't be guarded the way AP1–AP5 are; it must be made
+*hard* by structure and caught from *outside*.
+
+**Status here: guarded — see `verifier-integrity.md` (full treatment) and §7 of
+`SKILL.md`.** Three structural guards run in-band before Propose
+(`templates/verifier-canary.workflow.js`): an impossible-test canary, a diff-integrity
+check on protected paths, and a sampled cross-judge. One detector runs out-of-band
+(`templates/held-out-eval.workflow.js`, `held-out-eval.md`): a frozen suite with hidden
+oracles whose rising false-accept rate is the meta-overfit alarm. This is the gate that
+must hold before SCALE (removing the human merge).
+
 ## Using this file
 
 Don't treat it as a one-time read. A fix for one pattern can quietly reopen another —
@@ -78,3 +101,4 @@ touched.
 | AP3 | Manual Loop | Scheduling | ✅ guarded (mind the dry-mode default) |
 | AP4 | Blind Loop | Discovery | ✅ guarded |
 | AP5 | Tangled Loop | Handoff | ✅ guarded (worktree isolation, live mode) |
+| AP6 | Gamed Loop | Make verification un-gameable | ✅ guarded (canary + diff-integrity + cross-check, & held-out detector) — see `verifier-integrity.md` |

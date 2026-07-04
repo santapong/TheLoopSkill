@@ -103,6 +103,29 @@ flowchart TD
 
 At the base is the `workflow` engine and the two policies that govern it. `orchestrating-projects` and `automating-improvements` sit on top as planning/automation layers. Domain skills delegate where it's natural — `auditing-changes` calls `reviewing-code` for security, `writing-docs` consumes the ADR/C4 that `designing-systems` emits, `finding-frameworks` hands its search to `researching-topics`.
 
+## The autonomy ladder
+
+The plugin isn't only twelve skills — it's a **progression of autonomy**. Four rungs, each removing one unit of human involvement from the engineering loop. The rule is the whole discipline: **you climb only when the rung below is solid.** The human never disappears; they move from *doing the work*, to *approving it*, to *reading the alarms*, to *handling the exceptions*.
+
+```mermaid
+flowchart TB
+    O["<b>OBSERVE</b> — report only<br/>loop: reports · human: reads &amp; acts<br/><code>auditing-changes</code>, <code>reviewing-code</code>"]
+    V["<b>VERIFY</b> — propose, human merges<br/>loop: acts on a branch + adversarial verify · human: approves &amp; merges<br/><code>automating-improvements</code> (default)"]
+    S["<b>SUSTAIN</b> — keep the loop honest<br/>loop: detects its own gaming / drift · human: reads the alarms<br/><code>verifier-integrity</code> + <code>held-out-eval</code> (AP6)"]
+    C["<b>SCALE</b> — autonomous delivery <i>(off by default)</i><br/>loop: merges behind a canary + self-rolls-back · human: handles exceptions<br/><code>deployment.md §Advanced</code> + <code>canary-merge</code>"]
+    O --> V --> S --> C
+    C -. "any alarm degrades autonomy one rung down — the floor is always safe" .-> V
+```
+
+| Rung | The loop does | The human does | Implemented by | Status |
+|---|---|---|---|---|
+| **OBSERVE** | Reports findings; takes no action | Reads the report, decides | `auditing-changes`, `reviewing-code` | ✅ shipped |
+| **VERIFY** | Acts on a `claude/` branch, verifies adversarially, opens a draft PR | Approves and merges | `automating-improvements` (default mode) | ✅ shipped |
+| **SUSTAIN** | Detects when its own verifier is gamed or the loop meta-overfits | Reads the alarms; freezes config on a trip | `references/verifier-integrity.md` + `references/held-out-eval.md` | ✅ shipped |
+| **SCALE** | Merges behind a canary and rolls itself back on a bad signal | Handles the exceptions a rollback raises | `references/deployment.md` §Advanced + `templates/canary-merge.workflow.js` | 🔒 off by default |
+
+**Why SCALE is off by default — and why the ladder is sound anyway.** No production system removes the human from the merge step for *general* code (the ones that auto-ship do it only for narrow classes where CI is a complete spec). So SCALE ships as a **gated, reversible design draft**, not a proven recipe: it is enabled per-kind, only while every SUSTAIN signal is green, and it revokes its own autonomy the moment an alarm fires. That is the property that makes the whole ladder safe to climb — **it degrades downward.** SUSTAIN alarms freeze the loop; a SCALE trip drops it back to VERIFY; and VERIFY's floor — propose-only, a human merges — is always there to catch it. The worst case is never a runaway loop. It's a loop that quietly goes back to asking permission.
+
 ## The `workflow` engine
 
 ```
@@ -170,7 +193,7 @@ Every skill follows the same shape: `SKILL.md` (thin router) + `references/` (de
 | `.claude/skills/writing-docs/` | Doc types, style, standards; `doc-generation.workflow.js` |
 | `.claude/skills/finding-frameworks/` | Where to look, evaluation criteria, build-vs-buy, standards; `prior-art-search.workflow.js` |
 | `.claude/skills/engineering-harnesses/` | Permissions, hooks, mcp, automation-loops, standards; settings/mcp/hook scaffolds |
-| `.claude/skills/automating-improvements/` | Loop-design, feedback-intake, deployment, anti-patterns, comprehension-rot, credit-horizon, standards; loop + ledger + routine templates |
+| `.claude/skills/automating-improvements/` | Loop-design, feedback-intake, deployment (incl. SCALE), anti-patterns, comprehension-rot, credit-horizon, verifier-integrity + held-out-eval (the SUSTAIN rung), standards; loop + ledger + routine + held-out-eval + verifier-canary + canary-merge templates |
 | `.claude-plugin/plugin.json`, `marketplace.json` | Plugin + marketplace manifests |
 | `.claude/settings.json` | Enables the plugin for Claude Code on the web |
 | `INSTALL.md`, `CONTRIBUTING.md`, `CHANGELOG.md` | Install paths, contributor guide, version history |
