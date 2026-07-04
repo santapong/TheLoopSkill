@@ -20,7 +20,7 @@ The plugin is wired via `.claude-plugin/plugin.json` (which points at `./.claude
 ## Authoring a `SKILL.md`
 
 - **Frontmatter is required**: a YAML block with `name` and `description`.
-  - `name` — lowercase letters, numbers, hyphens; gerund style matching the directory (`reviewing-code`, `writing-tests`).
+  - `name` — lowercase letters, numbers, hyphens; gerund style matching the directory (`loop-review`, `loop-test`).
   - `description` — third person, **≤1024 characters**, stating *what it does* AND *when to use it* (the trigger phrases Claude matches on). No first/second person.
 - **Keep the body a thin router** (aim under ~400 lines). Push depth into `references/` files and load them on demand — this keeps token cost low, since only `SKILL.md` stays in context.
 - **Be prescriptive**: sane defaults with named escape hatches, not a neutral glossary. No leftover TODO/placeholder text.
@@ -34,7 +34,7 @@ Each skill carries a `references/standards.md` that grounds it in authoritative 
 2. **Pin** the current version/edition (with an "edition discipline" note — standards get revised).
 3. **Map** it to *this skill's* workflow — how a practitioner applies it here, not a generic description.
 
-`reviewing-code/references/owasp-cwe.md` is the exemplar (OWASP Top 10 2021, CWE Top 25, ASVS 5.0, CVSS v4). Match that rigor.
+`loop-review/references/owasp-cwe.md` is the exemplar (OWASP Top 10 2021, CWE Top 25, ASVS 5.0, CVSS v4). Match that rigor.
 
 ## Authoring a workflow template (`*.workflow.js`)
 
@@ -45,11 +45,11 @@ Workflow templates run under the Workflow tool's runtime, which has hard constra
 - **No `Date.now()`, `Math.random()`, or argless `new Date()`** — they throw (they'd break resume). Pass timestamps in via `args`; vary prompts by index for diversity.
 - Normalize input: `const input = typeof args === 'string' ? JSON.parse(args) : args`.
 - `.filter(Boolean)` every `parallel()` result (dead agents resolve to `null`); pass a `schema` to every consumed `agent()`; `log()` progress.
-- Prefer `pipeline()`; use a `parallel()` barrier only when a stage needs all prior results (dedup/merge, early-exit). See the harness & loop policies under `.claude/skills/workflow/references/`.
+- Prefer `pipeline()`; use a `parallel()` barrier only when a stage needs all prior results (dedup/merge, early-exit). See the harness & loop policies under `.claude/skills/loop-engine/references/`.
 
 ## Adding a lifecycle framework
 
-Copy `.claude/skills/workflow/frameworks/_TEMPLATE.md` to `frameworks/<Name>.md`, fill in the phases (each with a human gate where appropriate), and it's usable via `/workflow <task> --framework <Name>`. No skill changes needed.
+Copy `.claude/skills/loop-engine/frameworks/_TEMPLATE.md` to `frameworks/<Name>.md`, fill in the phases (each with a human gate where appropriate), and it's usable via `/loop-engine <task> --framework <Name>`. No skill changes needed.
 
 ## Validating your change
 
@@ -69,7 +69,7 @@ done
 grep -rnE 'Date\.now\(|Math\.random\(|new Date\(\)' .claude/skills --include='*.workflow.js' | grep -vE '//'
 
 # Hook scripts (if you touched them) parse and behave
-bash -n .claude/skills/engineering-harnesses/templates/hooks/*.sh
+bash -n .claude/skills/loop-harness/templates/hooks/*.sh
 ```
 
 Also confirm each new `SKILL.md` has valid `name` + `description` frontmatter, and that any file you reference in a `SKILL.md` actually exists.

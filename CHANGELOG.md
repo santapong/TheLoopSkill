@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.4.0] — 2026-07-04
+
+Renamed every skill into a collision-free **`loop-*`** namespace. The previous names were identical to Claude Code's built-in skills (`reviewing-code`, `diagnosing-bugs`, …), and the orchestration skill (`workflow`) additionally shadowed the built-in `/workflows` command. This is a **breaking change**: skill invocations change (e.g. `/workflow` → `/loop-engine`, `/reviewing-code` → `/loop-review`).
+
+### Changed
+- **All 12 skills renamed:**
+
+  | Old | New | | Old | New |
+  |---|---|---|---|---|
+  | `workflow` | `loop-engine` | | `writing-docs` | `loop-docs` |
+  | `orchestrating-projects` | `loop-orchestrate` | | `researching-topics` | `loop-research` |
+  | `reviewing-code` | `loop-review` | | `finding-frameworks` | `loop-scout` |
+  | `auditing-changes` | `loop-audit` | | `engineering-harnesses` | `loop-harness` |
+  | `diagnosing-bugs` | `loop-debug` | | `automating-improvements` | `loop-autopilot` |
+  | `designing-systems` | `loop-design` | | `writing-tests` | `loop-test` |
+
+- Every `SKILL.md` `name:` field, all cross-skill references and relative reference paths, the README skill map + dependency/autonomy diagrams, and `INSTALL.md` updated to the new names. Generic uses of "workflow" (the Workflow tool, `*.workflow.js` templates) are unchanged. `plugin.json` keywords are unchanged (they remain search terms, not skill names).
+- Bumped plugin + marketplace version to `0.4.0`.
+
+### Fixed
+- Corrected a pre-existing broken reference link in `loop-orchestrate/references/standards.md` (`../` → `../../` for the OWASP/CWE cross-reference).
+
 ## [0.3.0] — 2026-07-04
 
 The autonomy ladder's two open rungs — **SUSTAIN** and **SCALE** — land in `automating-improvements`. Default behavior is unchanged: the loop is still propose-only; SCALE ships off by default.

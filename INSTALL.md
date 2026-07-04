@@ -4,18 +4,18 @@ TheLoopSkill ships twelve Claude Code skills:
 
 | Skill | What it does |
 |---|---|
-| `workflow` | Author & run multi-agent Workflow scripts (pipeline/parallel/loop) governed by engineering policies and a lifecycle framework |
-| `reviewing-code` | Security + code-quality review (OWASP Top 10, CWE Top 25, ASVS; finder→verify orchestration) |
-| `designing-systems` | System/architecture design: patterns, API, backend, frontend perf, deployment, NFRs, ADRs + C4 |
-| `orchestrating-projects` | Project-manager planning layer: decompose into a task DAG and assign the right model+effort per task |
-| `researching-topics` | Multi-source research with adversarial fact-checking: search fan-out → deep-read → refute-first verify → cited synthesis |
-| `auditing-changes` | Change/impact audit → report: classify changes, trace blast radius, rate risk, check coverage (delegates security to reviewing-code) |
-| `writing-tests` | Design + write tests matching the repo's stack; verify each runs and fails for the right reason |
-| `diagnosing-bugs` | Hypothesis-driven debugging: reproduce → localize → root-cause → fix → regression test |
-| `writing-docs` | Write + maintain docs (README, API, docstrings, ADRs) via the Diátaxis model, verified against code |
-| `finding-frameworks` | Prior-art / build-vs-buy check before building: search stdlib → registries → services → standards, evaluate, recommend reuse |
-| `engineering-harnesses` | Set up a project's Claude Code harness: permissions, hooks, MCP (`.mcp.json`), and automation loops — from copy-paste scaffolds |
-| `automating-improvements` | Autonomous engineering loop: read feedback (issues/PRs/CI), act as draft PRs with tests, research improvements when idle — propose-only, never merges |
+| `loop-engine` | Author & run multi-agent Workflow scripts (pipeline/parallel/loop) governed by engineering policies and a lifecycle framework |
+| `loop-review` | Security + code-quality review (OWASP Top 10, CWE Top 25, ASVS; finder→verify orchestration) |
+| `loop-design` | System/architecture design: patterns, API, backend, frontend perf, deployment, NFRs, ADRs + C4 |
+| `loop-orchestrate` | Project-manager planning layer: decompose into a task DAG and assign the right model+effort per task |
+| `loop-research` | Multi-source research with adversarial fact-checking: search fan-out → deep-read → refute-first verify → cited synthesis |
+| `loop-audit` | Change/impact audit → report: classify changes, trace blast radius, rate risk, check coverage (delegates security to loop-review) |
+| `loop-test` | Design + write tests matching the repo's stack; verify each runs and fails for the right reason |
+| `loop-debug` | Hypothesis-driven debugging: reproduce → localize → root-cause → fix → regression test |
+| `loop-docs` | Write + maintain docs (README, API, docstrings, ADRs) via the Diátaxis model, verified against code |
+| `loop-scout` | Prior-art / build-vs-buy check before building: search stdlib → registries → services → standards, evaluate, recommend reuse |
+| `loop-harness` | Set up a project's Claude Code harness: permissions, hooks, MCP (`.mcp.json`), and automation loops — from copy-paste scaffolds |
+| `loop-autopilot` | Autonomous engineering loop: read feedback (issues/PRs/CI), act as draft PRs with tests, research improvements when idle — propose-only, never merges |
 
 The **canonical location** is `.claude/skills/<name>/` — a single source of truth that works for all three install paths below. The plugin references these same files via the `skills` field in `.claude-plugin/plugin.json`, so nothing is duplicated.
 
@@ -23,12 +23,12 @@ The **canonical location** is `.claude/skills/<name>/` — a single source of tr
 
 ## 1. Local (Claude Code CLI)
 
-**Option A — use this repo directly.** Open a Claude Code session anywhere inside the repo. Project skills under `.claude/skills/` are auto-discovered; type `/workflow`, `/reviewing-code`, etc. No enable step.
+**Option A — use this repo directly.** Open a Claude Code session anywhere inside the repo. Project skills under `.claude/skills/` are auto-discovered; type `/loop-engine`, `/loop-review`, etc. No enable step.
 
 **Option B — copy into another project.** Copy the skill folders you want into that project's `.claude/skills/`:
 
 ```bash
-cp -r .claude/skills/workflow /path/to/your-project/.claude/skills/
+cp -r .claude/skills/loop-engine /path/to/your-project/.claude/skills/
 ```
 
 Commit them so your team gets them too.
@@ -36,7 +36,7 @@ Commit them so your team gets them too.
 **Option C — make them personal (all your projects).** Copy into your user skills dir:
 
 ```bash
-cp -r .claude/skills/workflow ~/.claude/skills/
+cp -r .claude/skills/loop-engine ~/.claude/skills/
 ```
 
 ---
@@ -92,18 +92,18 @@ TheLoopSkill/
 ├── .claude/
 │   ├── settings.json        # extraKnownMarketplaces + enabledPlugins (web)
 │   └── skills/
-│       ├── workflow/
-│       ├── reviewing-code/
-│       ├── designing-systems/
-│       ├── orchestrating-projects/
-│       ├── researching-topics/
-│       ├── auditing-changes/
-│       ├── writing-tests/
-│       ├── diagnosing-bugs/
-│       ├── writing-docs/
-│       ├── finding-frameworks/
-│       ├── engineering-harnesses/
-│       └── automating-improvements/
+│       ├── loop-engine/
+│       ├── loop-review/
+│       ├── loop-design/
+│       ├── loop-orchestrate/
+│       ├── loop-research/
+│       ├── loop-audit/
+│       ├── loop-test/
+│       ├── loop-debug/
+│       ├── loop-docs/
+│       ├── loop-scout/
+│       ├── loop-harness/
+│       └── loop-autopilot/
 ├── INSTALL.md
 └── README.md
 ```
