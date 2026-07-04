@@ -66,6 +66,17 @@ Work on a `claude/`-prefixed branch only.
 3. **Cap the loop**: budget floor + dry counter + `MAX_ROUNDS`. No unbounded runs.
 4. **Dedup** against open issues/PRs so it never spams duplicate proposals.
 5. **Keep the network Trusted** and connectors minimal — the runner has no approval prompt.
+6. **The held-out suite is never visible to the Act stage.** It and its oracles are a protected path (§7); the moment the loop can read them, they measure nothing.
+
+## 7. Keep the loop honest over time (SUSTAIN)
+
+§1–6 build a loop that proposes safely and never *skips* a move — the five guards in `references/anti-patterns.md` (AP1–AP5). This section addresses the failure those guards can't see: the loop runs its verification and is **fooled**. Over many rounds a generator can learn to produce diffs that pass `safeToPropose` without being good, or the accumulated config (rubric + credit ledger) can drift into agreeing with them. That is **AP6 — the Gamed Loop** (`references/verifier-integrity.md`), and it is invisible from inside the loop by construction: the judge cannot report that it was gamed. Two mechanisms catch and constrain it.
+
+- **In-band hard gate — `templates/verifier-canary.workflow.js`.** Run it as a pre-flight on the candidates the loop marked `safeToPropose`, *before* the Propose gate. Three structural guards (`references/verifier-integrity.md`): an **impossible-test canary** (a must-fail test; if it passes, the runner was tampered with), a **diff-integrity** check (refuse any diff touching tests, rubric, held-out suite, canary, or CI gates), and a **sampled cross-judge** check for self-preference. Guards 1–2 are hard stops — a violation is dropped and escalated, never proposed and never argued down to a lower score.
+
+- **Out-of-band detector — `templates/held-out-eval.workflow.js`.** The one measurement taken entirely outside the loop, against ground truth the loop never sees. Deploy it as a **third companion Routine** (alongside credit-ledger and comprehension-digest) on a weekly / every-N-proposals schedule. It runs a **frozen suite** of tasks with **hidden deterministic oracles** through the loop's *current* verify config, and tracks the **false-accept rate** (loop said safe, oracle says wrong) against a persisted baseline. A false-accept rate **rising across runs** is the self-improvement-reversal signal — the loop pleasing its own judge while diverging from truth (`references/held-out-eval.md`). Meta-overfit here is not weight drift (the model is fixed); it is the accumulated **config** overfitting its own recent history.
+
+**Why this gates SCALE.** Removing the human merge step promotes `safeToPropose` into the merge decision itself. Every reason a human still merges today is a reason to trust that verdict less than the promotion requires. AP6's guards plus a standing held-out measurement of how often the verdict is wrong are the evidence that promotion would need — and even with them, the safe path to autonomous delivery is **merge-behind-canary + agent-driven rollback** (the SCALE mechanism — drafted in `references/deployment.md` §"Advanced: autonomous delivery" and `templates/canary-merge.workflow.js`, **off by default**; the base skill still stops at propose-only), with held-out eval as the tripwire that yanks autonomy back to propose-only the moment divergence rises. A perfect pre-merge gate is not the goal, because no gate catches everything.
 
 ## Reference files
 
@@ -73,6 +84,8 @@ Work on a `claude/`-prefixed branch only.
 - `references/feedback-intake.md` — the four sources and the exact GitHub tools; dedup
 - `references/deployment.md` — running it unattended (Cloud Routine / Action), safety scopes, notification, and the two companion Routines
 - `references/anti-patterns.md` — the five ways an autonomous loop degrades (AP1–AP5), mapped to this loop's guards; the pre-deploy checklist
+- `references/verifier-integrity.md` — AP6 (verification runs but is fooled) and its three structural guards; the SUSTAIN hardening that gates SCALE
+- `references/held-out-eval.md` — the external detector for AP6 / meta-overfit: a frozen suite with hidden oracles, and the rising-false-accept alarm
 - `references/comprehension-rot.md` — the one cost with no structural guard, and the forced random-sample digest that makes it visible
 - `references/credit-horizon.md` — closing the outcome-feedback gap: the trust ledger design and the three-knob mapping
 - `references/standards.md` — the authoritative standards this skill applies — named, version-pinned, and mapped to its workflow
@@ -80,3 +93,6 @@ Work on a `claude/`-prefixed branch only.
 - `templates/routine-prompt.md` — copy-paste prompt for a Cloud Routine / `.claude/loop.md`
 - `templates/credit-ledger.workflow.js` — the ledger reconcile pass (deploy as its own daily Routine)
 - `templates/comprehension-digest.routine.md` — the weekly comprehension-check digest prompt
+- `templates/verifier-canary.workflow.js` — the in-band AP6 gate: impossible-test canary + diff-integrity (hard) and sampled cross-judge (advisory), run before Propose
+- `templates/held-out-eval.workflow.js` — the out-of-band detector: frozen suite vs hidden oracles, false-accept trend + meta-overfit alarm (deploy as its own Routine)
+- `templates/canary-merge.workflow.js` — **SCALE (off by default):** the autonomous-delivery gate — eligibility-check a `safeToPropose` candidate, merge behind a canary, bake, promote or auto-rollback, trip to propose-only on alarm (`references/deployment.md` §Advanced)
