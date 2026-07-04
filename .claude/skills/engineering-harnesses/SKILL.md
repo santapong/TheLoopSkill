@@ -86,6 +86,7 @@ Commit `settings.json`, `hooks/`, `loop.md`, and `.mcp.json`; gitignore `setting
 - `references/hooks.md` — hook events, settings structure, stdin input, exit-code control, common recipes
 - `references/mcp.md` — .mcp.json schema, transports, scopes, env expansion, trust
 - `references/automation-loops.md` — every recurring/automation mechanism and how to choose
+- `references/standards.md` — the authoritative standards this skill applies — named, version-pinned, and mapped to its workflow
 - `templates/settings.json` — copy-paste project harness (permissions + hooks + env)
 - `templates/mcp.json` — copy-paste `.mcp.json` (stdio + http servers with env expansion)
 - `templates/hooks/session-start.sh`, `templates/hooks/guard-secrets.sh` — example hook scripts

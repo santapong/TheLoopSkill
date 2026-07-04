@@ -52,4 +52,5 @@ Deliver: a direct answer to the question up top, then the supporting sections (o
 
 - `references/methodology.md` — the sweep → read → verify → synthesize procedure in full, with the completeness critic
 - `references/source-evaluation.md` — source credibility, handling contradictory sources, and citation format
+- `references/standards.md` — the authoritative standards this skill applies — named, version-pinned, and mapped to its workflow
 - `templates/research.workflow.js` — search fan-out → dedup → read/verify pipeline → synthesis workflow script

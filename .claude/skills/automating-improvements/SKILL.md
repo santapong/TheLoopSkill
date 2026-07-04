@@ -75,6 +75,7 @@ Work on a `claude/`-prefixed branch only.
 - `references/anti-patterns.md` — the five ways an autonomous loop degrades (AP1–AP5), mapped to this loop's guards; the pre-deploy checklist
 - `references/comprehension-rot.md` — the one cost with no structural guard, and the forced random-sample digest that makes it visible
 - `references/credit-horizon.md` — closing the outcome-feedback gap: the trust ledger design and the three-knob mapping
+- `references/standards.md` — the authoritative standards this skill applies — named, version-pinned, and mapped to its workflow
 - `templates/improvement-loop.workflow.js` — the budget-guarded loop skeleton (dry by default)
 - `templates/routine-prompt.md` — copy-paste prompt for a Cloud Routine / `.claude/loop.md`
 - `templates/credit-ledger.workflow.js` — the ledger reconcile pass (deploy as its own daily Routine)

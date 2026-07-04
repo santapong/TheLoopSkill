@@ -84,4 +84,5 @@ This is the parallel finder → dedup → adversarial-verify pattern from the **
 - `references/severity-model.md` — severity × confidence scoring and the reporting bar
 - `references/owasp-cwe.md` — OWASP Top 10, CWE Top 25, and ASVS mappings
 - `references/quality-checks.md` — non-security code-quality checklist
+- `references/standards.md` — the authoritative standards this skill applies — named, version-pinned, and mapped to its workflow
 - `templates/security-review.workflow.js` — finder-per-category → dedup → adversarial-verify workflow script
