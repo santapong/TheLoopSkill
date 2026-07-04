@@ -21,7 +21,12 @@
     "testing",
     "debugging",
     "documentation",
-    "build-vs-buy"
+    "build-vs-buy",
+    "hooks",
+    "permissions",
+    "mcp",
+    "autonomous",
+    "automation"
   ],
   "skills": [
     "./.claude/skills"
