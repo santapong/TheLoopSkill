@@ -26,7 +26,8 @@ Read, from this skill's directory:
 
 1. `references/harness-policy.md` — the Harness Engineering Policy (orchestration design rules)
 2. `references/loop-policy.md` — the Loop Engineering Policy (iteration rules)
-3. `frameworks/<name>.md` — the chosen framework
+3. `references/standards.md` — prior art the harness/loop policies formalize (fan-out/fan-in, DAG execution)
+4. `frameworks/<name>.md` — the chosen framework
 
 If `frameworks/<name>.md` does not exist, list the `frameworks/` directory (ignore `README.md` and `_TEMPLATE.md`), show the user the available framework names, and ask which to use.
 

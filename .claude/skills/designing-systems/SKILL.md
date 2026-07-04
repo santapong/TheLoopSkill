@@ -104,6 +104,7 @@ Jump straight to the slice the user asked for; each row lists the reference and 
 - `references/frontend.md` — rendering strategies, Core Web Vitals budgets, caching hierarchy, data-fetching contract.
 - `references/deployment.md` — canary/feature flags, IaC, CI/CD, migrations, environment topology.
 - `references/nfr.md` — requirements intake, SLOs/error budgets, caching, capacity, resilience, cost.
+- `references/standards.md` — the authoritative standards this skill applies — named, version-pinned, and mapped to its workflow
 
 **Templates** (produce concrete artifacts, don't paraphrase them):
 

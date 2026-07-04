@@ -124,4 +124,5 @@ Reuse the normal workflow reporting and add the PM layer on top:
 
 - `references/task-decomposition.md` — building the typed task DAG (node schema, edge rules, fan-out vs loop, phase grouping).
 - `references/model-routing.md` — the "right model for the right job" table: `taskType` → model + effort tier, with rationale and escape hatches.
+- `references/standards.md` — the authoritative standards this skill applies — named, version-pinned, and mapped to its workflow
 - `templates/project-plan.workflow.js` — a `../workflow` script template that realizes one phase's sub-DAG with per-node model/effort/isolation and the ledger `log()` lines.

@@ -49,4 +49,5 @@ This is the parallel fan-out → converge pattern from the **`workflow`** skill 
 
 - `references/methodology.md` — localization in full: `git bisect`, binary-searching the code path, instrumentation, and delta-debugging the input
 - `references/hypothesis-testing.md` — enumerating falsifiable hypotheses, designing eliminating tests, and reading surprising results
+- `references/standards.md` — the authoritative standards this skill applies — named, version-pinned, and mapped to its workflow
 - `templates/bug-diagnosis.workflow.js` — parallel hypotheses → eliminate/converge → fix workflow script

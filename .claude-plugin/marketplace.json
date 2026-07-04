@@ -10,7 +10,7 @@
       "name": "theloopskill",
       "source": "./",
       "description": "Multi-agent workflow orchestration plus security-review, system-design, and project-orchestration skills.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "author": {
         "name": "santapong"
       }

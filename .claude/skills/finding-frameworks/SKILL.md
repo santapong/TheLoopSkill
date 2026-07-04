@@ -54,4 +54,5 @@ Deliver a short, decisive recommendation, not a survey: the pick (reuse X / adap
 - `references/where-to-look.md` — where to find prior art (stdlib/platform first, registries, managed services, standards, internal code) and how to search each
 - `references/evaluation-criteria.md` — the candidate scoring rubric: fit, maturity, license, security, lock-in, TCO
 - `references/build-vs-buy.md` — the reuse → adapt → build decision, YAGNI, boring-tech, and what never to build yourself
+- `references/standards.md` — the authoritative standards this skill applies — named, version-pinned, and mapped to its workflow
 - `templates/prior-art-search.workflow.js` — parallel discovery → per-candidate evaluation → build-vs-buy recommendation workflow script
